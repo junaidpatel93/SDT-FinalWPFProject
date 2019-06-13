@@ -1,0 +1,100 @@
+﻿<Page x:Class="BookMyShow.ShowEntry"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:BookMyShow"
+      mc:Ignorable="d" 
+      d:DesignHeight="450"
+      Title="Show Entry" Width="819">
+    <Page.Resources>
+        <local:Cities x:Key="Cities">
+            <local:City Name="Kitchener" Id="0"/>
+            <local:City Name="Waterloo" Id="1"/>
+            <local:City Name="Cambridge" Id="2"/>
+        </local:Cities>
+        <local:SeatClassDataList x:Key="seatClassDataList">
+            <local:SeatClassData Name="Silver Class ($10)" Id="0"/>
+            <local:SeatClassData Name="Gold Class ($15)" Id="1"/>
+            <local:SeatClassData Name="Platinum Class ($20)" Id="2"/>
+        </local:SeatClassDataList>
+        <local:NumberConverter x:Key="numberConverter"/>
+        <local:NameConverter x:Key="nameConverter"/>
+        <local:ShowTimeList x:Key="ShowTimeList">
+            <local:ShowTime Name="10 AM" Id="0"/>
+            <local:ShowTime Name="2 PM" Id="1"/>
+            <local:ShowTime Name="5 PM" Id="2"/>
+            <local:ShowTime Name="9 PM" Id="2"/>
+        </local:ShowTimeList>
+    </Page.Resources>
+    <Grid>
+        <Canvas>
+            <Label Name="lblTitle" Content="Ticket Booking System" Canvas.Left="289" Width="246" FontWeight="Bold" FontSize="18" Canvas.Top="2"/>
+
+            <Label Name="lblGenre" Content="Genre" Canvas.Left="199" Canvas.Top="50" FontSize="14"/>
+            <ComboBox Name="comboBoxGenre" Canvas.Left="268" Canvas.Top="50" Height="24" Width="160" ItemsSource="{Binding Path=Genres}" DisplayMemberPath="Name" IsSynchronizedWithCurrentItem="True" GotFocus="comboBoxGenre_GotFocus" FontSize="14">
+            </ComboBox>
+            <Label Name="lblErrorGenre" Content="Please select genre." Canvas.Left="428" Canvas.Top="48" Foreground="Red" FontWeight="Bold" Width="303" Visibility="Hidden"/>
+
+            <Label Name="lblMovie" Content="Movie" Canvas.Left="198" Canvas.Top="96" FontSize="14"/>
+            <ComboBox Name="comboBoxMovie" Canvas.Left="268" Canvas.Top="96" Height="24" Width="160" ItemsSource="{Binding Path=Genres/Movies}" DisplayMemberPath="Name" IsSynchronizedWithCurrentItem="true" GotFocus="comboBoxMovie_GotFocus" FontSize="14">
+            </ComboBox>
+            <Label Name="lblErrorMovie" Content="Please select movie." Canvas.Left="428" Canvas.Top="96" Foreground="Red" FontWeight="Bold" Width="301" Visibility="Hidden"/>
+
+            <Label Name="lblShowTime" Content="Show Time" Canvas.Left="168" Canvas.Top="140" FontSize="14"/>
+            <ComboBox Name="comboBoxShowTime" Canvas.Left="268" Canvas.Top="140" Height="24" Width="160"
+                      ItemsSource="{Binding Source={StaticResource ShowTimeList}}"  DisplayMemberPath="Name" SelectedValuePath="Name"
+                      GotFocus="comboBoxShowTime_GotFocus" FontSize="14">
+            </ComboBox>
+            <Label Name="lblErrorShowTime" Content="Please choose show time." Canvas.Left="428" Canvas.Top="140" Foreground="Red" FontWeight="Bold" Width="301" Visibility="Hidden"/>
+
+
+            <Label Name="lblShowDay" Content="Show Day" Canvas.Left="175" Canvas.Top="186" FontSize="14"/>
+            <ComboBox Name="comboBoxShowDay" Canvas.Left="268" Canvas.Top="186" Height="24" Width="160" GotFocus="comboBoxShowDay_gotFocus" FontSize="14">
+            </ComboBox>
+            <Label Name="lblErrorShowDay" Content="Please choose show day." Canvas.Left="428" Canvas.Top="186" Foreground="Red" FontWeight="Bold" Width="381" Visibility="Hidden"/>
+
+            <Label Name="lblNumberOfSeat" Content="Number of Seat" Canvas.Left="139" Canvas.Top="231" FontSize="14"/>
+            <TextBox Name="txtBoxNumberOfSeat" Height="24" Width="160" Canvas.Left="268" TextWrapping="Wrap" TextAlignment="Right" Canvas.Top="231" GotFocus="txtBoxNumberOfSeat_GotFocus"
+                     Foreground="{Binding Path=TicketData.NumberOfSeat, Converter={StaticResource numberConverter}}"
+                     ToolTip="{Binding ElementName=txtBoxNumberOfSeat, Path=(Validation.Errors)[0].ErrorContent}" FontSize="14">
+                <TextBox.Text>
+                    <Binding Path="TicketData.NumberOfSeat" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <local:NumberRule Min="1" Max="6"/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Name="lblErrorNumberOfSeat" Content="Please enter the number of seat. Range from (1-6)" Canvas.Left="428" Canvas.Top="231" Foreground="Red" FontWeight="Bold" Width="301" Visibility="Hidden"/>
+
+            <Label Name="lblSeatClass" Content="Seat Class" Canvas.Left="168" Canvas.Top="276" FontSize="14"/>
+            <ComboBox Name="comboBoxSeatClass" Canvas.Left="268" Canvas.Top="276" Height="24" Width="160" ItemsSource="{Binding Source={StaticResource seatClassDataList}}"  DisplayMemberPath="Name" SelectedValuePath="Name" GotFocus="comboBoxSeatClass_GotFocus" FontSize="14"/>
+            <Label Name="lblErrorSeatClass" Content="Please select seat class." Canvas.Left="428" Canvas.Top="276" Foreground="Red" FontWeight="Bold" Width="286" Visibility="Hidden"/>
+
+            <Label Name="lblName" Content="Your Name" Canvas.Left="168" Canvas.Top="321" FontSize="14"/>
+            <TextBox Name="txtBoxName" Height="24" Width="160" Canvas.Left="268" TextWrapping="Wrap" Canvas.Top="321" 
+                      Foreground="{Binding Path=TicketData.Name, Converter={StaticResource nameConverter}}"
+                     ToolTip="{Binding ElementName=txtBoxName, Path=(Validation.Errors)[0].ErrorContent}"
+                     GotFocus="txtBoxName_GotFocus" FontSize="14">
+                <TextBox.Text>
+                    <Binding Path="TicketData.Name" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <local:NameRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Name="lblErrorName" Content="Please enter your name. Length is more than two words." Canvas.Left="428" Canvas.Top="321" Foreground="Red" FontWeight="Bold" Width="333" Visibility="Hidden" Height="27"/>
+
+            <Label Name="lblCity" Content="City" Canvas.Left="212" Canvas.Top="365" FontSize="14"/>
+            <ComboBox Name="comboBoxCity" Canvas.Left="268" Canvas.Top="365" Height="24" Width="160" ItemsSource="{Binding Source={StaticResource Cities}}"  DisplayMemberPath="Name" SelectedValuePath="Name" GotFocus="comboBoxCity_GotFocus" FontSize="14"/>
+            <Label Name="lblErrorCity" Content="Please select the city." Canvas.Left="428" Canvas.Top="365" Foreground="Red" FontWeight="Bold" Width="148" Visibility="Hidden"/>
+
+            <Button Name="btnBook" Content="Book" Canvas.Left="149" Canvas.Top="421" Height="40" Width="185" Click="btnBookClick" FontSize="14" Background="#FFDDDDDD"/>
+            <Button Name="btnCheckDetail" Content="Check Details" Canvas.Left="388" Canvas.Top="421"  Height="40" Width="185" Click="btnCheckDetail_Click" FontSize="14"/>
+
+            <Image Source="/image/sidebar_img.png" Height="170" Canvas.Top="307" Width="142" Canvas.Left="2"/>
+        </Canvas>
+    </Grid>
+</Page>
